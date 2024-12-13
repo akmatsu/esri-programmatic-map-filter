@@ -50,11 +50,28 @@ export default function MapViewer() {
     }
   }, [searchParams]);
 
-  function filterDistrict(districtNumber: string) {
+  async function filterDistrict(districtNumber: string) {
     const map = viewRef.current?.map;
+    const view = viewRef.current;
     const layer = map?.findLayerById(layerId) as FeatureLayer;
     if (layer) {
       layer.definitionExpression = districtNumber === 'all' ? '' : `DISTNUM = ${districtNumber}`;
+
+      if (districtNumber !== 'all') {
+        const query = layer.createQuery();
+        query.where = `DISTNUM = ${districtNumber}`;
+        query.returnGeometry = true;
+
+        const response = await layer.queryFeatures(query);
+
+        if (response.features.length) {
+          const geometry = response.features[0].geometry;
+
+          if (view && geometry) {
+            view.goTo(geometry).catch((error) => console.error('Error zooming to geometry', error));
+          }
+        }
+      }
     }
   }
 
