@@ -1,5 +1,5 @@
 'use client';
-import { ChangeEvent, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import Map from '@arcgis/core/Map';
 import MapView from '@arcgis/core/views/MapView';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
@@ -59,10 +59,12 @@ export default function ProjectMapViewer() {
       const clickedResult = response.results.find((r) => r.layer && r.layer.id === layerId);
 
       if (clickedResult) {
-        const OID = clickedResult.graphic.attributes?.OBJECTID;
+        const OID = (
+          clickedResult as __esri.MapViewViewHit & { graphic: { attributes: { OBJECTID: string } } }
+        ).graphic.attributes?.OBJECTID;
 
         if (OID) {
-          router.push(`?project=${OID}`);
+          router.push(`?project${OID}`);
         }
       }
     });
@@ -74,7 +76,7 @@ export default function ProjectMapViewer() {
         view.destroy();
       }
     };
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     const objectId = searchParams.get('project');
