@@ -64,7 +64,7 @@ export default function ProjectMapViewer() {
         ).graphic.attributes?.OBJECTID;
 
         if (OID) {
-          router.push(`?project${OID}`);
+          router.push(`?project=${OID}`);
         }
       }
     });
