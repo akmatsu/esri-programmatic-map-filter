@@ -7,7 +7,7 @@ import VectorTileLayer from '@arcgis/core/layers/VectorTileLayer';
 import SimpleFillSymbol from '@arcgis/core/symbols/SimpleFillSymbol';
 import SimpleRenderer from '@arcgis/core/renderers/SimpleRenderer';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
+import { Button } from './Button';
 
 export default function ProjectMapViewer() {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -113,14 +113,7 @@ export default function ProjectMapViewer() {
     <div>
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
         <div className="fixed flex gap-2 p-2 bottom-0 right-0">
-          {searchParams.get('project') && (
-            <Link
-              className="bg-blue-600 shadow transition-colors hover:bg-blue-500 active:bg-blue-400 active:transition-none px-4 py-2 rounded"
-              href="?"
-            >
-              Clear
-            </Link>
-          )}
+          {searchParams.get('project') && <Button href="?">Clear</Button>}
         </div>
         <div style={{ height: '100vh', width: '100vw' }} ref={mapRef}></div>
       </main>
